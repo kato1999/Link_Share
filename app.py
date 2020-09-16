@@ -29,6 +29,14 @@ def show_page():
     
     return render_template('show.html', content="test")
 
+@app.route('/edit.html')
+def edit_page():
+    return render_template('edit.html')
+
+@app.route('/edit.html', methods=["POST"])
+def edit_page_post():
+    #Todo:データベースへの書き込み
+    return redirect('show.html')
 
 @app.route('/main.html')
 def main_page():
