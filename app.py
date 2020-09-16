@@ -47,8 +47,6 @@ def main1_page():
 
     return redirect('main.html')
 
-    # return render_template('main.html', result=Markup(result))
-
 
 if __name__ == "__main__":
     app.run(debug=True)
