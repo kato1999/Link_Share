@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import os, sys, codecs, io
-from flask import Flask, request, render_template, Markup ,redirect
+from flask import Flask, request, render_template, Markup ,redirect ,jsonify
 import shutil
+import boto3
 
 import db
 
@@ -34,6 +35,33 @@ def show_page():
 def new_link():
     name = request.args.get('name')
     return render_template('new_link.html', name=name)
+
+@app.route('/new_file.html')
+def new_file():
+    name = request.args.get('name')
+    return render_template('new_file.html', name=name)
+
+@app.route('/file_add.html', methods=["POST"])
+def create_file():
+    title = request.form["title"]
+    uploaded_file = request.files['file']
+    
+
+    s3 = boto3.client('s3', region_name = 'ap-northeast-1')
+    # ・title.encode().decode()の所について
+    # そのままtitleですると、AWS S3にアップした際に、空白になった
+    # titleの部分のstringがutf-8にデコードされてない？
+    # しかし、本来Python3では元からデコードされるそうです…。
+    # 結論：とりあえずこれで動いたので放置
+    s3.put_object(
+        Body = io.BufferedReader(uploaded_file).read(),
+        Bucket = 'carrierwaveapp2',
+        Key = f'{title.encode().decode()}/{uploaded_file.filename}'
+    )
+
+    # Todo:アップをミスした場合の処理
+
+    return redirect('show.html?name='+title)
 
 # リンクの追加
 @app.route('/show_add.html', methods=["POST"])
