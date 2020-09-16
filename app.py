@@ -47,6 +47,7 @@ def main1_page():
 
     return redirect('main.html')
 
+##コメント
 
 if __name__ == "__main__":
     app.run(debug=True)
