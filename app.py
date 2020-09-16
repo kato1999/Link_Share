@@ -26,9 +26,13 @@ def new_page():
 
 @app.route('/show.html')
 def show_page():
-    
+    result = db.show2_db()
+    name = request.args.get('name')
     return render_template('show.html', content="test")
 
+@app.route('/show_add.html/<name>', methods=["POST"])
+def show1_page():
+    return render_template('show.html', content="test")
 
 @app.route('/main.html')
 def main_page():
@@ -47,7 +51,6 @@ def main1_page():
 
     return redirect('main.html')
 
-##コメント
 
 if __name__ == "__main__":
     app.run(debug=True)
