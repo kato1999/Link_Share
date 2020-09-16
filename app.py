@@ -22,7 +22,7 @@ def top_page():
 
 @app.route('/new.html')
 def new_page():
-    return render_template('new.html', content="test")
+    return render_template('new.html')
 
 
 @app.route('/show.html')
@@ -91,10 +91,20 @@ def main1_page():
     author = request.form["author"]
     description = request.form["description"]
     
-    db.add_group(title, author, description)
+    add_result = db.add_group(title, author, description)
 
-    return redirect('main.html')
+    if add_result:
+        return redirect('main.html')
+    
+    else:
+        result = db.show_db()
+        same_exist=""" 
+        <div class="text-center h4 my-4 text-danger">既に同じタイトルのまとめが存在します。</div>
+        """
+        return render_template('main.html', result=Markup(result) , same_exist=Markup(same_exist))
 
+
+    
 
 if __name__ == "__main__":
     app.run(debug=True)

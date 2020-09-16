@@ -26,12 +26,22 @@ def add_group(title, author, description):
     con = sqlite3.connect('title.db')
     cur = con.cursor()
 
+    # 同じグループ名の登録があった場合
+    sql = 'select * from groups_db where title="'+ title +'"'
+    cur.execute(sql)
+
+    if len(cur.fetchall()):
+        print("既に登録されています。",flush=True)
+        return False
+
+
     sql = 'insert into groups_db (title, author, description) values (?,?,?)'
     cur.execute(sql, (title, author, description))
     con.commit()
 
     cur.close()
     con.close()
+    return True
 
 def add_link(title, link_title, url, description):
     con = sqlite3.connect('title.db')
