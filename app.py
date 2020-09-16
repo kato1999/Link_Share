@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os, sys, codecs, io
-from flask import Flask, request, render_template, Markup
+from flask import Flask, request, render_template, Markup ,redirect
 import shutil
 
 import db
@@ -32,8 +32,9 @@ def show_page():
 
 @app.route('/main.html')
 def main_page():
+    result = db.show_db()
 
-    return render_template('main.html', text="memo")
+    return render_template('main.html', result=Markup(result))
 
 @app.route('/main_add.html', methods=["POST"])
 def main1_page():
@@ -44,9 +45,9 @@ def main1_page():
     
     db.add_db(title, link, description)
 
-    result = db.show_db()
+    return redirect('main.html')
 
-    return render_template('main.html', result=Markup(result))
+    # return render_template('main.html', result=Markup(result))
 
 
 if __name__ == "__main__":
