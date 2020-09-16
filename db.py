@@ -6,7 +6,7 @@ def make_db():
     con = sqlite3.connect(dbname)
     cur = con.cursor()
 
-    create_table = 'create table if not exists title_db (title text, link text, description text)'
+    create_table = 'create table if not exists title_db (id integer primary key ,title text, link text, description text)'
 
     cur.execute(create_table)
     con.commit()
@@ -42,16 +42,24 @@ def show_db():
         <h4 class="card-title">{title}</h4>
         <h6 class="card-subtitle">{link}</h6>
         <p class="card-text">{description}</p>
-        <a href="./show.html" class="btn btn-outline-primary">まとめを見る</a>
+        <a href="./show/{id}" class="btn btn-outline-primary">まとめを見る</a>
       </div>
     </div>
     """
 
     for row in cur.execute(sql):
-        result += text.format(title=row[0], link=row[1], description=row[2])
+        result += text.format(id=row[0], title=row[1], link=row[2], description=row[3])
     cur.close()
     con.close()
 
     return result
 
-   
+def show_table(id):
+    result = ""
+    content = []
+    con = sqlite3.connect('title.db')
+    cur = con.cursor()
+    con.text_factory = str
+
+    sql = 'select * from title_db where' id
+    # 続きは後で

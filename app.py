@@ -24,11 +24,15 @@ def new_page():
     return render_template('new.html', content="test")
 
 
-@app.route('/show.html')
-def show_page():
+# @app.route('/show.html')
+# def show_page():
     
-    return render_template('show.html', content="test")
+#     return render_template('show.html', content="test")
 
+@app.route('/show/<id>')
+def hello(id=None):
+    #return name
+    return render_template('show.html', title='flask test', id=id) 
 
 @app.route('/main.html')
 def main_page():
