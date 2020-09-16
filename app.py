@@ -14,9 +14,7 @@ app = Flask(__name__)
 
 @app.route('/index.html')
 def top_page():
-    # 操作
-
-    return render_template('index.html', text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    return render_template('index.html')
 
 
 @app.route('/new.html')
