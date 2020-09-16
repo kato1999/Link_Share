@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 db.make_db()
 
-@app.route('/index.html')
+@app.route('/')
 def top_page():
     return render_template('index.html')
 
@@ -45,8 +45,9 @@ def new_file():
 def create_file():
     title = request.form["title"]
     uploaded_file = request.files['file']
-    
+    description = request.form["description"]
 
+    # 参考:https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html#S3.Client.put_object
     s3 = boto3.client('s3', region_name = 'ap-northeast-1')
     # ・title.encode().decode()の所について
     # そのままtitleですると、AWS S3にアップした際に、空白になった
@@ -60,6 +61,8 @@ def create_file():
     )
 
     # Todo:アップをミスした場合の処理
+
+    db.add_file(title, uploaded_file.filename, description)
 
     return redirect('show.html?name='+title)
 
