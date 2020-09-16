@@ -28,7 +28,7 @@ def new_page():
 def show_page():
     result = db.show2_db()
     name = request.args.get('name')
-    return render_template('show.html', content="test")
+    return render_template('show.html', result=Markup(result))
 
 @app.route('/show_add.html/<name>', methods=["POST"])
 def show1_page():
