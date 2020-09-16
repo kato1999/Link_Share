@@ -26,13 +26,26 @@ def new_page():
 
 @app.route('/show.html')
 def show_page():
-    result = db.show2_db()
     name = request.args.get('name')
-    return render_template('show.html', result=Markup(result))
+    result = db.link_show(name)
+    return render_template('show.html', result=Markup(result), name=name)
 
-@app.route('/show_add.html/<name>', methods=["POST"])
-def show1_page():
-    return render_template('show.html', content="test")
+@app.route('/new_link.html')
+def new_link():
+    name = request.args.get('name')
+    return render_template('new_link.html', name=name)
+
+# リンクの追加
+@app.route('/show_add.html', methods=["POST"])
+def create_link():
+    title = request.form["title"]
+    link_title = request.form["link_title"]
+    url = request.form["url"]
+    description = request.form["description"]
+    
+    db.add_link(title, link_title, url, description)
+
+    return redirect('show.html?name='+title)
 
 @app.route('/main.html')
 def main_page():
@@ -44,10 +57,10 @@ def main_page():
 def main1_page():
     
     title = request.form["title"]
-    link = request.form["link"]
+    author = request.form["author"]
     description = request.form["description"]
     
-    db.add_db(title, link, description)
+    db.add_group(title, author, description)
 
     return redirect('main.html')
 
