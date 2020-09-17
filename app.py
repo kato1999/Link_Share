@@ -2,6 +2,7 @@
 import os, sys, codecs, io
 from flask import Flask, request, render_template, Markup ,redirect
 import shutil
+import hashlib
 
 import db
 
@@ -14,7 +15,13 @@ app = Flask(__name__)
 
 db.make_db()
 
-@app.route('/index.html')
+
+# ハッシュ値を求める関数
+def get_hash(s: str):
+    return hashlib.sha256(s.encode()).hexdigest()
+
+
+@app.route('/')
 def top_page():
     return render_template('index.html')
 
@@ -30,10 +37,12 @@ def show_page():
     result = db.link_show(name)
     return render_template('show.html', result=Markup(result), name=name)
 
+
 @app.route('/new_link.html')
 def new_link():
     name = request.args.get('name')
     return render_template('new_link.html', name=name)
+
 
 # リンクの追加
 @app.route('/show_add.html', methods=["POST"])
@@ -47,11 +56,13 @@ def create_link():
 
     return redirect('show.html?name='+title)
 
+
 @app.route('/main.html')
 def main_page():
     result = db.show_db()
-
+    
     return render_template('main.html', result=Markup(result))
+
 
 @app.route('/main_add.html', methods=["POST"])
 def main1_page():
@@ -59,8 +70,10 @@ def main1_page():
     title = request.form["title"]
     author = request.form["author"]
     description = request.form["description"]
+    # パスワードテスト
+    password = get_hash(author)
     
-    db.add_group(title, author, description)
+    db.add_group(title, author, description, password)
 
     return redirect('main.html')
 

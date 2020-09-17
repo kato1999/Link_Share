@@ -1,4 +1,9 @@
 import sqlite3
+import hashlib
+
+# ハッシュ値を求める関数
+def get_hash(s: str):
+    return hashlib.sha256(s.encode()).hexdigest()
 
 # DBの作成
 def make_db():
@@ -6,10 +11,10 @@ def make_db():
     con = sqlite3.connect(dbname)
     cur = con.cursor()
 
-    create_table = 'create table if not exists groups_db (title text, author text, description text)'
+    create_table = 'create table if not exists groups_db (id integer primary key, title text, author text, description text, password text)'
     cur.execute(create_table)
 
-    create_table = 'create table if not exists links_db (title text, link_title text, url text, description text)'
+    create_table = 'create table if not exists links_db (id integer primary key, title text, link_title text, url text, description text)'
     cur.execute(create_table)
 
     con.commit()
@@ -18,12 +23,12 @@ def make_db():
 
 
 # groupの追加
-def add_group(title, author, description):
+def add_group(title, author, description, password):
     con = sqlite3.connect('title.db')
     cur = con.cursor()
 
-    sql = 'insert into groups_db (title, author, description) values (?,?,?)'
-    cur.execute(sql, (title, author, description))
+    sql = 'insert into groups_db (title, author, description, password) values (?,?,?,?)'
+    cur.execute(sql, (title, author, description, password))
     con.commit()
 
     cur.close()
@@ -48,21 +53,29 @@ def show_db():
     cur = con.cursor()
     con.text_factory = str
 
-    sql = 'select * from groups_db'
+    sql = 'select * from groups_db ORDER BY id DESC'
 
     text = """
     <div class="card my-3">
       <div class="card-body">
         <h4 class="card-title">{title}</h4>
-        <h6 class="card-subtitle">{author}</h6>
+        <h6 class="card-subtitle">作成者：{author}</h6>
         <p class="card-text">{description}</p>
         <a href="./show.html?name={name}" class="btn btn-outline-primary">まとめを見る</a>
       </div>
     </div>
     """
 
+    # パスワード
+    password = "ネコ"
+    password = get_hash(password)
+
     for row in cur.execute(sql):
-        result += text.format(title=row[0], author=row[1], description=row[2], name=row[0])
+        if password == row[4]:
+            result += text.format(title=row[1], author=row[2], description=row[3], name=row[1])
+        else:
+            pass
+
     cur.close()
     con.close()
 
@@ -98,12 +111,13 @@ def link_show(name):
     <h2 class="py-3">{title}</h2>
     <h3>{author}</h3>
     <p>{description}</p>
+    <a href="./main.html" class="btn btn-outline-primary mb-3">戻る</a>
     """
 
     text = """
     <div class="row">
       <div class="col-md-3">
-        <h3><a href={url}>{link}</a></h3>
+        <h3><a href={url}>{link_title}</a></h3>
       </div>
       <div class="col-md-9">
         <p>{description}</p>
@@ -112,10 +126,10 @@ def link_show(name):
     """
     
     for row in cur.execute(group_sql):
-        result1 += group_text.format(title=row[0], author=row[1] , description=row[2])
+        result1 += group_text.format(title=row[1], author=row[2] , description=row[3])
 
     for row in cur.execute(sql):
-        result2 += text.format(title=row[0], link=row[1], url=row[2], description=row[3], name=row[0])
+        result2 += text.format(title=row[1], link_title=row[2], url=row[3], description=row[4], name=row[0])
     cur.close()
     con.close()
 
