@@ -3,6 +3,7 @@ import os, sys, codecs, io
 from flask import Flask, request, render_template, Markup ,redirect ,jsonify
 import shutil
 import boto3
+import hashlib
 
 import db
 
@@ -14,6 +15,11 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 app = Flask(__name__)
 
 db.make_db()
+
+
+# ハッシュ値を求める関数
+def get_hash(s: str):
+    return hashlib.sha256(s.encode()).hexdigest()
 
 @app.route('/')
 def top_page():
@@ -30,6 +36,7 @@ def show_page():
     name = request.args.get('name')
     result = db.link_show(name)
     return render_template('show.html', result=Markup(result), name=name)
+
 
 @app.route('/new_link.html')
 def new_link():
@@ -78,20 +85,29 @@ def create_link():
 
     return redirect('show.html?name='+title)
 
+
 @app.route('/main.html')
 def main_page():
     result = db.show_db()
-
+    
     return render_template('main.html', result=Markup(result))
 
+# グループの追加
 @app.route('/main_add.html', methods=["POST"])
 def main1_page():
     
     title = request.form["title"]
     author = request.form["author"]
     description = request.form["description"]
+    password = request.form["password"]
+    # パスワードのハッシュ化
+    if password=='':
+        password = ''
+    else:
+        password = get_hash(password)
     
-    add_result = db.add_group(title, author, description)
+    
+    add_result = db.add_group(title, author, description, password)
 
     if add_result:
         return redirect('main.html')
@@ -102,6 +118,7 @@ def main1_page():
         <div class="text-center h4 my-4 text-danger">既に同じタイトルのまとめが存在します。</div>
         """
         return render_template('main.html', result=Markup(result) , same_exist=Markup(same_exist))
+
 
 
     
