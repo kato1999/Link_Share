@@ -121,17 +121,20 @@ def link_show(name):
     file_sql = 'select * from files_db where title="'+ name +'"'
 
     group_text = """
-    <h2 class="py-3">{title}</h2>
-    <h3>{author}</h3>
-    <p>{description}</p>
+    <div style="padding:0px 0; margin:20px 0; border-bottom:2px solid grey;">
+        <a href="./main.html" class="btn btn-outline-primary mb-3">戻る</a>
+        <h2 class="py-3">タイトル：{title}</h2>
+        <h5>作成者：{author}</h5>
+        <p>説明：{description}</p>
+    </div>
     """
 
     text = """
-    <div class="row">
-      <div class="col-md-3">
+    <div class="row" style="margin: 20px 0; padding: 20px 0; border-bottom: 2px solid grey;">
+      <div class="col-md-4">
         <h3><a href={url}>{link}</a></h3>
       </div>
-      <div class="col-md-9" style="word-wrap: break-word;">
+      <div class="col-md-8" style="word-wrap: break-word;">
         <p>{description}</p>
       </div>
     </div>
@@ -178,6 +181,8 @@ def link_show(name):
     con.close()
 
     if result2=="":
-        result2 = "まだ何も登録してません"
+        result2 = """
+        <h3>まだ何も登録してません</h3><br>
+        """
 
     return result1 + result2
