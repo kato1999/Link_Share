@@ -63,15 +63,20 @@ def main_page():
     
     return render_template('main.html', result=Markup(result))
 
-
+# グループの追加
 @app.route('/main_add.html', methods=["POST"])
 def main1_page():
     
     title = request.form["title"]
     author = request.form["author"]
     description = request.form["description"]
-    # パスワードテスト
-    password = get_hash(author)
+    password = request.form["password"]
+    # パスワードのハッシュ化
+    if password=='':
+        password = ''
+    else:
+        password = get_hash(password)
+    
     
     db.add_group(title, author, description, password)
 

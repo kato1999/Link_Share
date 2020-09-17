@@ -66,15 +66,11 @@ def show_db():
     </div>
     """
 
-    # パスワード
-    password = "ネコ"
-    password = get_hash(password)
-
     for row in cur.execute(sql):
-        if password == row[4]:
-            result += text.format(title=row[1], author=row[2], description=row[3], name=row[1])
-        else:
+        if row[4]:
             pass
+        else:
+            result += text.format(title=row[1], author=row[2], description=row[3], name=row[1])
 
     cur.close()
     con.close()
