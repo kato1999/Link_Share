@@ -12,6 +12,14 @@
         <label for="author">作成者</label>
         <input class="form-control" name="author"  id="author" type="text">
       </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="pass_exists" onchange="chk(this.value)">
+        <label class="form-check-label" for="pass_exists">パスワードを設定する</label>
+      </div>
+      <div class="form-group">
+        <label for="author">パスワード</label>
+        <input class="form-control" name="author"  id="author" type="text">
+      </div>
       <div class="form-group pb-3">
         <label for="description">説明</label>
         <textarea class="form-control" name="description" id="description"></textarea>
