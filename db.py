@@ -72,7 +72,6 @@ def add_file(title, file_name, description):
 
 def show_db():
     result = ""
-    content = []
     con = sqlite3.connect('title.db')
     cur = con.cursor()
     con.text_factory = str
@@ -119,7 +118,6 @@ def add_links_db(title, link_title, url, description):
 def link_show(name):
     result1 = ""
     result2 = ""
-    content = []
     con = sqlite3.connect('title.db')
     cur = con.cursor()
     con.text_factory = str
