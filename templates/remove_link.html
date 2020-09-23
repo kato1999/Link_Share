@@ -1,0 +1,19 @@
+{%- extends "layout.html" %}
+{%- block content %}
+<main>
+  <div class="container">
+    <h2 class="py-3">リンクを削除する</h2>
+    <form action="" method="POST">
+      <div class="form-group">
+        <label for="title">グループ名</label>
+        <input class="form-control" name="title" id="title group_title" type="text" value="{{name}}" readonly="readonly" >
+      </div>
+      <div class="form-group">
+        <label for="delete_number">上から何番目？</label>
+        <input class="form-control" name="delete_number" id="delete_number" type="text" >
+      </div>
+      <button type="submit" class="btn btn-raised btn-primary" formaction="show_remove.html">削除</button>
+    </form>
+  </div>
+</main>
+{%- endblock %}

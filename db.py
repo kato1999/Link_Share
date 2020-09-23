@@ -129,7 +129,7 @@ def link_show(name):
     group_text = """
     <div style="padding:0px 0; margin:20px 0; border-bottom:2px solid grey;">
         <a href="./main.html" class="btn btn-outline-primary mb-3">戻る</a>
-        <h2 class="py-3">タイトル：{title}</h2>
+        <h2 class="py-3">{title}</h2>
         <h5>作成者：{author}</h5>
         <p>説明：{description}</p>
     </div>
@@ -192,3 +192,17 @@ def link_show(name):
         """
 
     return result1 + result2
+
+
+# テスト　リンク削除
+def delete_link(number):
+    con = sqlite3.connect('title.db')
+    cur = con.cursor()
+
+    sql = 'delete from links_db where id = (select id from links_db limit 1 offset ?-1);'
+    cur.execute(sql, (number,))
+    con.commit()
+
+    cur.close()
+    con.close()
+# テスト　ここまで↑

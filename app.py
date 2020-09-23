@@ -120,6 +120,22 @@ def main1_page():
         return render_template('main.html', result=Markup(result) , same_exist=Markup(same_exist))
 
 
+#　テスト　リンク削除
+@app.route('/remove_link.html')
+def remove_link():
+    name = request.args.get('name')
+    return render_template('remove_link.html', name=name)
+
+# リンクの削除（POST）
+@app.route('/show_remove.html', methods=["POST"])
+def remove2_link():
+    title = request.form["title"]
+    number = request.form["delete_number"]
+
+    db.delete_link(number)
+    return redirect('show.html?name='+title)
+# テスト　ここまで↑
+
 
     
 
